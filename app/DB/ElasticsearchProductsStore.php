@@ -9,6 +9,7 @@
 namespace App\DB;
 
 
+use App\Cache\KeyValueCache;
 use App\Models\Product;
 use Elasticsearch\ClientBuilder;
 
@@ -17,14 +18,29 @@ class ElasticsearchProductsStore implements ProductsStore
 
     private $index_name = 'products';
     private $client = null;
+    private $cacheService = null;
     /***
      * Elasticsearch constructor.
      * @param $elastic_search_configuration: an array containing elasticsearch's connection configuration, default
      * value of this parameter is an empty array and the program will try to connect to elastic search at localhost:9200
+     * @param $cacheService: the caching service
      */
-    public function __construct($elastic_search_configuration = array())
+    public function __construct($elastic_search_configuration = array(), KeyValueCache $cacheService)
     {
         $this->client = ClientBuilder::create()->build();
+        $this->cacheService = $cacheService;
+    }
+
+    private function _search($params)
+    {
+        $cache_key = base64_encode(json_encode($params));
+        $cache_value = $this->cacheService->get($cache_key);
+        if ($cache_value) {
+            return $cache_value;
+        }
+        $result = $this->client->search($params);
+        $this->cacheService->set($cache_key, $result);
+        return $result;
     }
 
     /**
@@ -66,7 +82,7 @@ class ElasticsearchProductsStore implements ProductsStore
             unset($elastic_params['body']);
         }
 
-        $resp = $this->client->search($elastic_params);
+        $resp = $this->_search($elastic_params);
         $products = [];
         $distinct_colors = [];
         foreach ($resp['hits']['hits'] as $doc) {
