@@ -47,4 +47,9 @@ class MemCachedCache implements KeyValueCache
     {
         return $this->client->get($key);
     }
+
+    public function flush()
+    {
+        return $this->client->flush();
+    }
 }

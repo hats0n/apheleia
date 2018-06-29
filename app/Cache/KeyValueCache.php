@@ -27,4 +27,7 @@ interface KeyValueCache
      */
     public function get($key);
 
+
+    public function flush();
+
 }

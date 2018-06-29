@@ -15,10 +15,10 @@ class ProductsStoreServiceProvider extends ServiceProvider
      * @return void
      */
 
-    protected $defer = true;
+//    protected $defer = true;
     public function register()
     {
-        $this->app->singleton(ProductsStore::class, function($app)
+        $this->app->singleton(ProductsStore::class, function()
         {
             return new ElasticsearchProductsStore(
                 [

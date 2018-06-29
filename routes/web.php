@@ -1,6 +1,7 @@
 <?php
 
 use App\DB\ProductsStore;
+use App\DB\UsersStore;
 use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +52,7 @@ Route::get('/user/products', function (ProductsStore $store, Request $request) {
         'selected_colors' => $color_filters,
         'colors' => array_keys($ret['colors'])
     ]);
-});
+})->middleware('sessionLoggedIn');
 
 Route::get('/user/products/{product_id}', function (ProductsStore $store, Request $request, $product_id = null) {
     if (!$product_id) {
@@ -61,4 +62,50 @@ Route::get('/user/products/{product_id}', function (ProductsStore $store, Reques
     }
     $product = $store->getSingleProduct($product_id);
     return view('user_product_view', ['product'=>$product]);
+})->middleware('sessionLoggedIn');
+
+Route::get('/signup', function () {
+    return view('signup');
+});
+
+Route::post('/signup', function (UsersStore $userStore, Request $request) {
+    $email = $request->input('email') or null;
+    $password = $request->input('password') or null;
+    if (!$email || !$password) {
+        $request->session()->flash('message.level', 'danger');
+        $request->session()->flash('message.content', "Username/Password not provided");
+        redirect()->back();
+    }
+    $userStore->addUser($email, $password);
+
+    $request->session()->flash('message.level', 'success');
+    $request->session()->flash('message.content', "User added successfully!");
+    return redirect('/login');
+
+});
+
+Route::get('/login', function (Request $request) {
+    return view('login');
+})->middleware('sessionLoggedIn');
+
+Route::post('/login', function (UsersStore $userStore, Request $request) {
+    $email = $request->input('email') or null;
+    $password = $request->input('password') or null;
+    if (!$email || !$password) {
+        $request->session()->flash('message.level', 'danger');
+        $request->session()->flash('message.content', "Username/Password not provided");
+        redirect()->back();
+    }
+    if (!$userStore->checkUser($email, $password)) {
+        $request->session()->flash('message.level', 'danger');
+        $request->session()->flash('message.content', "Incorrect Username/Password");
+        return redirect()->back();
+    }
+    $request->session()->put('is_logged_in', true);
+    return redirect('user/products');
+});
+
+Route::get('/logout', function (Request $request) {
+    $request->session()->remove('is_logged_in');
+    return view('login');
 });

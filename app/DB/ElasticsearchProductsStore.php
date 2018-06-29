@@ -103,6 +103,7 @@ class ElasticsearchProductsStore implements ProductsStore
             'type' => '_doc',
             'id' => $product_id,
         ]);
+        $this->cacheService->flush();
     }
 
     public function saveNewProduct($product_data)
@@ -123,6 +124,7 @@ class ElasticsearchProductsStore implements ProductsStore
                 'full_text_search' => "{$product_data['product_title']} {$product_data['product_description']}$full_text_search",
             ]
         ]);
+        $this->cacheService->flush();
         $product_id = $resp['_id'];
         return $product_id;
     }

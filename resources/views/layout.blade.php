@@ -19,6 +19,20 @@
     @yield('action-stylesheet')
 </head>
 <body>
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Apheleia</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/admin">Admin</a></li>
+            <li><a href="/user/products">UserArea</a></li>
+            <li><a href="/logout">Logout</a></li>
+            <li><a href="/signup">Signup</a></li>
+        </ul>
+    </div>
+</nav>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
