@@ -14,10 +14,10 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h4>{{$product['title']}}</h4>
-                <p>{{$product['description']}}</p>
-                @foreach ($product['variants'] as $variant)
-                    <b>{{$variant['color']}}</b>: <span>{{$variant['price']}}</span><br/>
+                <h4>{{$product->getTitle()}}</h4>
+                <p>{{$product->getDescription()}}</p>
+                @foreach ($product->getVariants() as $variant)
+                    <b>{{$variant->getColor()}}</b>: <span>{{$variant->getPrice()}}</span><br/>
                 @endforeach
             </div>
         </div>

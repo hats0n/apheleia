@@ -23,12 +23,12 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="#">{{$product['title']}}</a>
+                                <a href="#">{{$product->getTitle()}}</a>
                             </h4>
-                            <p class="card-text">{{$product['description']}}</p>
+                            <p class="card-text">{{$product->getDescription()}}</p>
                         </div>
                         <div class="card-footer">
-                            <a data-confirm="Are you sure?" data-method="delete" href="/admin/product/{{$product['_id']}}/delete" rel="nofollow">
+                            <a data-confirm="Are you sure?" data-method="delete" href="/admin/product/{{$product->getId()}}/delete" rel="nofollow">
                                 <button type="button" class="btn btn-primary">Remove</button>
                             </a>
                         </div>
