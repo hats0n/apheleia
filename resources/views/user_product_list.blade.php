@@ -15,7 +15,14 @@
         <form method="GET">
             <div class="form-group">
                 <label for="product_search_box">Search</label>
-                <input type="text" class="form-control" id="product_search_box" name="query" placeholder="Search your product" required>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="product_search_box"
+                        name="query"
+                        placeholder="Search your product"
+                        value="{{$query ?: ""}}"
+                >
             </div>
             <div class="container">
             <div class="row">
@@ -23,10 +30,11 @@
                     <ul>
                         @foreach($colors as $color)
                             <div class="form-group">
-                                <label><input type="checkbox" name="color[]" value="{{$color}}">{{$color}}</label>
+                                <label><input type="checkbox" name="color[]" value="{{$color}}" {{ in_array($color,$selected_colors?:[]) ? 'checked' : "" }}>{{$color}}</label>
                             </div>
                         @endforeach
                     </ul>
+                    <button type="submit" class="btn btn-primary">Filter</button>
                 </div>
                 <div class="col-md-8">
                     <div class="container-fluid">

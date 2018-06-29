@@ -47,6 +47,8 @@ Route::get('/user/products', function (ProductsStore $store, Request $request) {
     $ret = $store->searchProduct($query, $color_filters);
     return view('user_product_list', [
         'products'=>$ret['products'],
+        'query' => $query,
+        'selected_colors' => $color_filters,
         'colors' => array_keys($ret['colors'])
     ]);
 });
